@@ -3,10 +3,10 @@
 
     ModAPI.meta.title("Ancient Sword");
     ModAPI.meta.description("Adds a mystical Ancient Sword with a unique recipe");
-    ModAPI.meta.credits("By Mr. Franco");
-    ModAPI.meta.version("v1.1");
+    ModAPI.meta.credits("By You");
+    ModAPI.meta.version("v1.2");
 
-    ModAPI.addEventListener("lib:libcustomitems:loaded", () => {
+    function registerItem() {
         console.log("Registering Ancient Sword...");
 
         LibCustomItems.registerItem({
@@ -23,18 +23,9 @@
             ],
 
             recipeLegend: {
-                "O": {
-                    type: "block",
-                    id: "obsidian"
-                },
-                "G": {
-                    type: "item",
-                    id: "gold_ingot"
-                },
-                "S": {
-                    type: "item",
-                    id: "stick"
-                }
+                "O": { type: "block", id: "obsidian" },
+                "G": { type: "item", id: "gold_ingot" },
+                "S": { type: "item", id: "stick" }
             },
 
             onRightClickGround: `/*/user, world, itemstack, blockpos/*/
@@ -46,6 +37,15 @@
         });
 
         console.log("Ancient Sword registered!");
-    });
+    }
+
+    // 🔥 THIS IS THE FIX
+    if (typeof LibCustomItems !== "undefined") {
+        // Library already loaded
+        registerItem();
+    } else {
+        // Wait for it
+        ModAPI.addEventListener("lib:libcustomitems:loaded", registerItem);
+    }
 
 })();
