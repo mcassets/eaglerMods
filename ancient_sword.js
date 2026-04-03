@@ -1,23 +1,51 @@
+// Ancient Sword Mod
 (function AncientSwordMod() {
+
     ModAPI.meta.title("Ancient Sword");
-    ModAPI.meta.description("Renames the Diamond Sword to Ancient Sword");
-    ModAPI.meta.credits("By You");
-    ModAPI.meta.version("v1.0");
+    ModAPI.meta.description("Adds a mystical Ancient Sword with a unique recipe");
+    ModAPI.meta.credits("By Mr. Franco");
+    ModAPI.meta.version("v1.1");
 
-    ModAPI.dedicatedServer.appendCode(function () {
+    ModAPI.addEventListener("lib:libcustomitems:loaded", () => {
+        console.log("Registering Ancient Sword...");
 
-        ModAPI.hooks.methods.nm_ItemStack_getDisplayName = function (original, itemStack) {
-            try {
-                var item = itemStack.getItem();
-                var unloc = item.func_77658_a(); // getUnlocalizedName()
+        LibCustomItems.registerItem({
+            tag: "mymod:ancient_sword",
+            base: "diamond_sword",
+            name: "Ancient Sword",
+            qty: 1,
+            useRecipe: true,
 
-                if (unloc && unloc.includes("diamond_sword")) {
-                    return ModAPI.util.str("Ancient Sword");
+            recipe: [
+                " O ",
+                " G ",
+                " S "
+            ],
+
+            recipeLegend: {
+                "O": {
+                    type: "block",
+                    id: "obsidian"
+                },
+                "G": {
+                    type: "item",
+                    id: "gold_ingot"
+                },
+                "S": {
+                    type: "item",
+                    id: "stick"
                 }
-            } catch (e) {}
+            },
 
-            return original(itemStack);
-        };
+            onRightClickGround: `/*/user, world, itemstack, blockpos/*/
+                var newHealth = user.getHealth() + 2;
+                if(newHealth > 20) newHealth = 20;
+                user.setHealth(newHealth);
+                return false;
+            `
+        });
 
+        console.log("Ancient Sword registered!");
     });
+
 })();
